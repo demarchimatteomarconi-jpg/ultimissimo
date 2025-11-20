@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ringraziamenti</title>
+
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f2f2f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007aff;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
+        }
+
+        .tab.active {
+            color: #007aff;
+            border-bottom-color: #007aff;
+        }
+
+        .tab:hover {
+            color: #007aff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .upload-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 12px;
+        }
+
+        .upload-section h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .file-input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .file-input-group label {
+            min-width: 100px;
+            font-weight: 500;
+        }
+
+        .file-input {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        /* Anteprima Immagini Singole (non tagliate) */
+        .preview-img {
+            max-width: 100px;
+            height: auto;
+            max-height: 100px;
+            border-radius: 6px;
+            object-fit: contain; /* Impedisce il taglio */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: #e0e0e0;
+        }
+
+        .gallery-upload {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .gallery-item label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        /* Stili specifici per le anteprime nella galleria */
+        #galleryUploadList .preview-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover; /* Riempie il contenitore della griglia */
+            max-width: none;
+            margin-top: 10px;
+        }
+
+        .view-btn {
+            width: 100%;
+            padding: 15px;
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
+
+        .view-btn:hover {
+            background: #0051d5;
+        }
+        
+        /* Setup Access (Modal) */
+        .setup-access {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .setup-access .container {
+            max-width: 400px;
+            padding: 30px;
+            margin: auto;
+        }
+
+        .setup-access.hidden {
+            display: none;
+        }
+
+        /* Pagina Setup */
+        .setup-page {
+            display: none;
+        }
+
+        .setup-page.active {
+            display: block;
+        }
+
+        .view-page.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .nameCard {
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .specialCard {
+            background: #e3f2fd;
+        }
+
+        .nameCard h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .passwordInput {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .passwordInput:focus {
+            outline: none;
+            border-color: #007aff;
+        }
+
+        .accessBtn {
+            width: 100%;
+            padding: 10px;
+            background: #007aff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .accessBtn:hover {
+            background: #0051d5;
+        }
+
+        #contentBox {
+            margin-top: 30px;
+            padding: 30px;
+            background: #fafafa;
+            border-radius: 12px;
+            display: none;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        #contentBox h2 {
+            margin-top: 0;
+            color: #007aff;
+        }
+
+        #closeBtn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #c7c7cf;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        #singlePhoto {
+            max-width: 100%;
+            height: auto;
+            margin-top: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto; /* Rimuove l'altezza fissa, mantenendo le proporzioni */
+            max-height: 150px; /* Aggiunge un limite di altezza (facoltativo, ma consigliato) */
+            border-radius: 8px;
+            object-fit: contain; /* NON TAGLIA L'IMMAGINE */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: #e0e0e0; /* Aggiunge uno sfondo per le immagini non quadrate */
+
+        }
+
+        .errorMsg {
+            color: #ff3b30;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #666;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        /* Pulsante Setup fluttuante (lo nascondiamo) */
+        .setup-link {
+            display: none; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="setupAccess" class="setup-access hidden">
+        <div class="container">
+            <h1>🔐 Setup Accesso</h1>
+            <p>Inserisci la password per accedere alla pagina di caricamento delle immagini.</p>
+            <input type="password" id="setupPassword" class="passwordInput" placeholder="Password di Setup" />
+            <div class="errorMsg" id="setupErrorMsg"></div>
+            <button class="accessBtn" onclick="checkSetupPassword()">Accedi al Setup</button>
+            <button class="back-btn" style="margin-top: 15px; width: 100%;" onclick="backToView()">← Torna ai Ringraziamenti</button>
+        </div>
+    </div>
+    
+    <div class="container" id="mainContainer">
+        
+        <div id="setupPage" class="setup-page">
+            <h1>📸 Setup Immagini</h1>
+            <p class="subtitle">Carica le immagini per ogni persona e per la galleria "Altri"</p>
+
+            <button class="back-btn" onclick="backToView()">← Torna ai Ringraziamenti</button>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('persone')">Persone Singole</button>
+                <button class="tab" onclick="switchTab('galleria')">Galleria Altri (40 foto)</button>
+            </div>
+
+            <div id="tab-persone" class="tab-content active">
+                <div class="upload-section">
+                    <h3>Carica le foto delle persone</h3>
+                    <div id="personUploadList"></div>
+                </div>
+            </div>
+
+            <div id="tab-galleria" class="tab-content">
+                <div class="upload-section">
+                    <h3>Carica le 40 foto per la galleria "Altri"</h3>
+                    <div class="gallery-upload" id="galleryUploadList"></div>
+                </div>
+            </div>
+
+            <button class="view-btn" onclick="backToView()">✅ Salva e Torna ai Ringraziamenti</button>
+        </div>
+
+        <div id="viewPage" class="view-page active">
+            <h1>Ringraziamenti</h1>
+            <p style="text-align: center;">Inserisci la password per accedere al tuo messaggio personalizzato.</p>
+
+            <div class="grid" id="nameGrid"></div>
+
+            <div id="contentBox">
+                <h2 id="who"></h2>
+                <p id="contentText"></p>
+                <img id="singlePhoto" style="display: none;" alt="Foto del ringraziato">
+                <div id="galleryContainer" style="display: none;"></div>
+                <button id="closeBtn">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SETUP_PASSWORD = "matale6699"; 
+
+        const persone = {
+            "Chiara & Valentina": {
+                password: "cv01",
+                messaggio: "Ciao Chiara e Ciao Vale, Ci tenevo tantissimo a scrivervi per ringraziarvi per il vostro supporto costante durante tutto il mio percorso accademico. Le risate, le vacanze e i tantissimi bei momenti passati insieme sono una parte fondamentale di questo ricordo. Siete state un punto di riferimento e una gioia ineguagliabile! Mi raccomando: trattate bene i vostri fidanzati, perché senza di voi sono (letteralmente) persi! 😉 Grazie di cuore per tutto, vi voglio un mondo di bene!"
+            },
+            "Michele Murtari": {
+                password: "mm02",
+                messaggio: "Ciao Michi, Non ho bisogno di molte parole per descrivervi: sei una persona super simpatica, molto disponibile e con cui il tempo vola via velocemente! Ti ringrazio per tutti i momenti passati insieme e per le infinite risate. Grazie per essere quella persona con cui ci si può davvero divertire, staccando completamente la spina dalla routine. Ti voglio bene."
+            },
+            "Denise Bari": {
+                password: "db03",
+                messaggio: "Ciao Deni, In primis ti vorrei ringraziare non solo per me, ma per Tia: riesci a renderlo felice, e dato che è un mio caro amico, questo mi rende molto contento. Inoltre, vorrei ringraziarti per il tuo sostegno, per i tuoi sorrisi, per tutti i momenti passati insieme e per le nostre serate passate solo in tre. Non cambiare mai, continua così che spacchi tutto! Ti voglio bene."
+            },
+            "Sephora Porcelli": {
+                password: "sp04",
+                messaggio: "Ciao Sephora, Ci conosciamo ormai da tantissimi anni e volevo cogliere l'occasione per ringraziarti profondamente per la persona meravigliosa che sei. Grazie per tutti i momenti che abbiamo condiviso e per tutte le risate indimenticabili che ci facciamo ogni volta. So che posso contare su di te per qualsiasi viaggio che mi venga in mente, soprattutto se ti porto al mare! Non cambiare mai, perché sei una vera forza della natura! Ti voglio bene."
+            },
+            "Lucrezia Rubini": {
+                password: "lr05",
+                messaggio: "Ciao Lu, Non so se ti aspettavi di essere inclusa nei ringraziamenti, ma per me sei una persona davvero speciale e ho voluto assolutamente cogliere l'occasione. Innanzitutto, sei una persona super disponibile e incredibilmente simpatica. Ci tengo a sottolineare che, anche se ci vediamo solo un paio di settimane l'anno, tu sei sempre presente e mi hai accompagnato per gran parte della mia vita. Ogni anno ritrovarci è una conferma della bellezza di questo legame. Inoltre, tutte le volte che ti sento, mi porti subito alla mente Zeri. Sai bene che quello è il mio 'posto del cuore', dove ho trascorso infiniti momenti bellissimi e conosciuto persone fantastiche. Grazie per la tua presenza e per questo bellissimo ricordo che mi evochi!"
+            },
+            "Stefano Longoni": {
+                password: "sl06",
+                messaggio: "Ciao Longo, Ci conosciamo ormai da tantissimo tempo e volevo cogliere l'occasione per ringraziarti per tutti i momenti passati insieme. Ti voglio bene."
+            },
+            "Daniela Giacomelli": {
+                password: "dg07",
+                messaggio: "Cara Dani, Devo ammetterlo: il nostro rapporto non è partito proprio nel migliore dei modi, visto che appena ci siamo conosciuti ti stavo antipatico! 😂 Nonostante questo inizio... scomodo, per fortuna, con il tempo ci siamo conosciuti meglio. Fin da subito ho avuto pochi dubbi: sei una persona fantastica, sensibile e super disponibile. Ti ringrazio per la tua costante presenza, e per ricordarmi sempre che ho la testa tra le nuvole e mi dimentico le cose! Ti ringrazio per tutti i momenti fantastici passati insieme: i festini, gli après-ski, le Pasquetta, le giornate indimenticabili in valle e, come potrei dimenticarlo, lo Spritz Running!, non cambiare mai che sei fantastica! Ti voglio un mondo di bene e ti ringrazio infinitamente per il tuo supporto. Sappi che per qualsiasi cosa, io ci sono!"
+            },
+            "Annie Fugazza": {
+                password: "af08",
+                messaggio: "Ciao Annie, Lo so, non ci sentiamo ormai da anni. Nonostante questo, ci tengo a dire che sei stata una delle persone più importanti della mia vita, con cui ho trascorso la maggior parte del tempo e vissuto i momenti più belli per oltre 10 anni. Come ben sai, mi dispiace un sacco che ci siamo allontanati, ma purtroppo è andata così. Nonostante la distanza, volevo ringraziarti per tutto: per tutti i momenti passati insieme, felici e non, per tutte le risate, le sclerate e i pianti. Sarai sempre una parte integrante di me e dei miei ricordi. Ti ringrazio con tutto il cuore e voglio ricordarti che ti voglio bene."
+            },
+            "Mattia De Peccati": {
+                password: "mdp09",
+                messaggio: "Ciao Matti, Ci tenevo tantissimo a ringraziarti per tutti i momenti passati insieme. Le tue chiacchierate e le nostre risate hanno contribuito a farmi passare quest'anno di tesi in maniera molto più leggera. Sei una persona fantastica. Ti voglio bene."
+            },
+            "Martino Girardi": {
+                password: "mg10",
+                messaggio: "Ciao Marti, Ci conosciamo ormai da tanto tempo, e ne abbiamo passate davvero tante insieme! Colgo l'occasione per ringraziarti per tutti i momenti condivisi, per le infinite discussioni sul calcio che non ci facciamo mai mancare, e più di tutto, per il tuo modo di essere. Ti voglio bene!"
+            },
+            "Federico Pasquariello": {
+                password: "fp11",
+                messaggio: "Ciao Pasqua, Colgo l'occasione per ringraziarti di cuore per il tuo sostegno, per la tua preziosa capacità di ascolto e, ovviamente, per tutti i momenti fantastici che abbiamo passato insieme. Ti voglio bene."
+            },
+            "Fabio Stroppa": {
+                password: "fs12",
+                messaggio: "Ciao Fabio, Ormai ci conosciamo da tantissimo tempo e volevo ringraziarti per tutti i momenti passati insieme, per tutti i discorsi stimolanti che abbiamo fatto e per essere rimasto sempre lo stesso, una presenza affidabile in tutti questi anni. Ti voglio bene."
+            },
+            "Federica Ferri": {
+                password: "ff13",
+                messaggio: "Ciao Fede, Non saprei davvero da dove iniziare a descriverti. Sei una persona fantastica, simpatica, super disponibile, e hai quel 'poco di romano' che mi fa impazzire! Nonostante non ci conosciamo da moltissimo tempo, abbiamo legato subito in modo incredibile. Posso dirti in tutta tranquillità che ora sei una delle persone più importanti per me: mi sostieni, mi supporti e soprattutto, con te sto davvero bene. Ti ringrazio per tutti i momenti passati insieme, per le risate, ma anche per le varie discussioni che ritengo fondamentali per un rapporto sano. Ti auguro il meglio! Ti voglio un mondo di bene. E ricorda: se hai bisogno, io ci sarò sempre!"
+            },
+            "Gianluca Sieve": {
+                password: "gs14",
+                messaggio: "Ciao Gianlu, Colgo l'occasione per ringraziarti per tutti i momenti passati insieme, per tutte le discussioni e i discorsi stimolanti che abbiamo fatto e, soprattutto, per il tuo modo di fare che rende ogni momento molto simpatico. Sei una bella persona. Ti voglio bene."
+            },
+            "Michela Sisti": {
+                password: "ms15",
+                messaggio: "Ciao Michi, Partiamo da un presupposto fondamentale: sei il libero più forte della storia! Detto questo, ti volevo ringraziare per tutti i momenti passati insieme. Sei una bellissima persona. Ti voglio bene."
+            },
+            "Filippo Artusi": {
+                password: "fa16",
+                messaggio: "Caro Pippo, Volevo cogliere questa occasione per ringraziarti, dato che ti conosco praticamente da sempre. Il nostro legame speciale non ha bisogno di molte parole, ma ci tengo a dirti grazie per tutto il tempo passato insieme, per le infinite risate che abbiamo condiviso e, soprattutto, per la tua disponibilità sincera, una qualità che oggi non è affatto scontata. Ti voglio bene!"
+            },
+            "MeccBio Lab": {
+                password: "bioreactor",
+                messaggio: "Ciao tutti, Desidero ringraziarvi di cuore per quest'anno intenso e meraviglioso. È stato un percorso complesso, ma l'ho affrontato con entusiasmo grazie al vostro continuo supporto e alla vostra costante presenza. Vi ringrazio per quella vostra sete di conoscenza che è contagiosa e stimolante, per averla condivisa con me e per aver reso l'ambiente di lavoro un luogo di crescita. Grazie per i momenti più leggeri: gli aperitivi in ufficio e quelli indimenticabili sulla terrazza a Fisica, le innumerevoli risate e, soprattutto, l'aiuto fondamentale nel superare le difficoltà che si sono presentate lungo il percorso di tesi. Un ringraziamento speciale va ai dottorandi: Giulia, Giada e Leonardo. Siete stati una parte integrante di questa esperienza, una risorsa preziosa e un punto di riferimento insostituibile. Ai Miei Compagni di Tesi: Non potrei non menzionare i miei fantastici compagni di tesi: Cristina, Fabiola, Marco, Federico, Nicla e Ilaria. Siete voi che, con la vostra presenza, le vostre risate e, sì, anche con quelle battute a dir poco orribili, avete reso quest'anno leggero e indimenticabile. Grazie per aver sdrammatizzato e per aver creato un fantastico clima. Al Mio Co-Relatore: Infine, un ringraziamento particolare al mio co-relatore, Matteo. Ti ringrazio per l'aiuto cruciale che mi hai dato in questo percorso. Ti sei sempre dimostrato disponibile per una discussione costruttiva, per delucidare ogni mio dubbio e, cosa più importante, per avermi insegnato quasi tutte le nozioni e le competenze che ho acquisito quest'anno. Grazie per la tua disponibilità, in particolare per aver sempre saputo ascoltare le mie 'pazze idee' con pazienza e apertura. Grazie a tutti, di vero cuore.",
+                isGallery: false 
+            },
+            "Ringraziamenti generali (pw: altri123)": {
+                password: "altri123",
+                messaggio: "Grazie di cuore a tutti i colleghi, amici e familiari che hanno reso questo percorso incredibile. Le vostre foto e i vostri pensieri mi accompagneranno sempre.",
+                isGallery: true,
+                photoCount: 40
+            }
+        };
+
+        const uploadedImages = {};
+        const galleryImages = {};
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Per gestire gli event listener
+            const targetButton = document.querySelector(`.tab[onclick*="'${tabName}'"]`);
+            if (targetButton) {
+                targetButton.classList.add('active');
+            } else if (event && event.target) {
+                 event.target.classList.add('active');
+            }
+
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        function createPersonUploadInputs() {
+            const container = document.getElementById('personUploadList');
+            container.innerHTML = '';
+            
+            Object.keys(persone).forEach(name => {
+                if (persone[name].isGallery && name !== "MeccBio Lab") return;
+                
+                const group = document.createElement('div');
+                group.className = 'file-input-group';
+                
+                const label = document.createElement('label');
+                label.textContent = name;
+                
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.className = 'file-input';
+                input.onchange = (e) => handleImageUpload(e, name);
+                
+                const preview = document.createElement('img');
+                preview.className = 'preview-img';
+                preview.id = `preview-${name}`;
+                preview.style.display = 'none';
+                
+                group.appendChild(label);
+                group.appendChild(input);
+                group.appendChild(preview);
+                container.appendChild(group);
+                
+                // Ricarica l'anteprima
+                if (uploadedImages[name]) {
+                    preview.src = uploadedImages[name];
+                    preview.style.display = 'block';
+                }
+            });
+        }
+
+        function createGalleryUploadInputs() {
+            const container = document.getElementById('galleryUploadList');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= 40; i++) {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                
+                const label = document.createElement('label');
+                label.textContent = `Foto ${i}`;
+                
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.className = 'file-input';
+                input.onchange = (e) => handleGalleryImageUpload(e, i);
+                
+                const preview = document.createElement('img');
+                preview.className = 'preview-img';
+                preview.id = `gallery-preview-${i}`;
+                preview.style.display = 'none';
+                preview.style.width = '100%';
+                preview.style.maxWidth = 'none';
+                preview.style.marginTop = '10px';
+                
+                item.appendChild(label);
+                item.appendChild(input);
+                item.appendChild(preview);
+                container.appendChild(item);
+
+                if (galleryImages[i]) {
+                    preview.src = galleryImages[i];
+                    preview.style.display = 'block';
+                }
+            }
+        }
+
+        function handleImageUpload(event, name) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    uploadedImages[name] = e.target.result;
+                    const preview = document.getElementById(`preview-${name}`);
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleGalleryImageUpload(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    galleryImages[index] = e.target.result;
+                    const preview = document.getElementById(`gallery-preview-${index}`);
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Funzione Segreta per accedere al Setup tramite console
+        window.showSetupAccess = function() {
+            document.getElementById('viewPage').classList.remove('active');
+            document.getElementById('setupAccess').classList.remove('hidden');
+        }
+
+        function checkSetupPassword() {
+            const input = document.getElementById('setupPassword');
+            const errorMsg = document.getElementById('setupErrorMsg');
+
+            if (input.value === SETUP_PASSWORD) {
+                errorMsg.style.display = 'none';
+                document.getElementById('setupAccess').classList.add('hidden');
+                document.getElementById('setupPage').classList.add('active');
+                input.value = "";
+            } else {
+                errorMsg.textContent = "Password di Setup errata!";
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function backToView() {
+            document.getElementById('setupAccess').classList.add('hidden');
+            document.getElementById('setupPage').classList.remove('active');
+            document.getElementById('viewPage').classList.add('active');
+            initViewPage(); 
+        }
+
+        function generateGalleryHtml() {
+            let html = '<div class="gallery">';
+            for (let i = 1; i <= 40; i++) {
+                if (galleryImages[i]) {
+                    html += `<img src="${galleryImages[i]}" alt="Ringraziamento ${i}">`;
+                }
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function resetContentBox() {
+            const singlePhotoElement = document.getElementById("singlePhoto");
+            const galleryContainer = document.getElementById("galleryContainer");
+
+            singlePhotoElement.style.display = "none";
+            singlePhotoElement.src = "";
+            galleryContainer.style.display = "none";
+            galleryContainer.innerHTML = "";
+        }
+
+        function checkPassword(name, inputPassword, errorElement) {
+            const persona = persone[name];
+
+            if (inputPassword !== persona.password) {
+                errorElement.textContent = "Password errata!";
+                errorElement.style.display = "block";
+                return false;
+            }
+
+            errorElement.style.display = "none";
+            return true;
+        }
+
+        function showContent(name) {
+            resetContentBox();
+
+            const contentBox = document.getElementById("contentBox");
+            const who = document.getElementById("who");
+            const contentText = document.getElementById("contentText");
+            const singlePhotoElement = document.getElementById("singlePhoto");
+            const galleryContainer = document.getElementById("galleryContainer");
+
+            const persona = persone[name];
+
+            who.textContent = name;
+            contentText.textContent = persona.messaggio;
+
+            if (persona.isGallery) {
+                galleryContainer.innerHTML = generateGalleryHtml();
+                galleryContainer.style.display = "block";
+                singlePhotoElement.style.display = "none";
+            } else {
+                if (uploadedImages[name]) {
+                    singlePhotoElement.src = uploadedImages[name];
+                    singlePhotoElement.style.display = "block";
+                }
+                galleryContainer.style.display = "none";
+            }
+
+            contentBox.style.display = "block";
+            contentBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function initViewPage() {
+            const grid = document.getElementById("nameGrid");
+            grid.innerHTML = '';
+
+            Object.keys(persone).forEach(name => {
+                const card = document.createElement("div");
+                card.className = "nameCard";
+
+                if (persone[name].isGallery) {
+                    card.classList.add("specialCard");
+                }
+
+                const title = document.createElement("h3");
+                title.textContent = name;
+
+                const input = document.createElement("input");
+                input.type = "password";
+                input.className = "passwordInput";
+                input.placeholder = "Inserisci password";
+
+                const button = document.createElement("button");
+                button.className = "accessBtn";
+                button.textContent = "Accedi";
+
+                const errorMsg = document.createElement("div");
+                errorMsg.className = "errorMsg";
+
+                button.addEventListener("click", () => {
+                    const password = input.value;
+                    if (password === "") {
+                        errorMsg.textContent = "Inserisci una password!";
+                        errorMsg.style.display = "block";
+                        return;
+                    }
+
+                    if (checkPassword(name, password, errorMsg)) {
+                        showContent(name);
+                        input.value = "";
+                    }
+                });
+
+                input.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") {
+                        button.click();
+                    }
+                });
+
+                card.appendChild(title);
+                card.appendChild(input);
+                card.appendChild(button);
+                card.appendChild(errorMsg);
+                grid.appendChild(card);
+            });
+
+            document.getElementById("closeBtn").onclick = () => {
+                document.getElementById("contentBox").style.display = "none";
+                resetContentBox();
+            };
+        }
+
+        // Inizializzazione
+        createPersonUploadInputs();
+        createGalleryUploadInputs();
+        initViewPage();
+
+        // Listener per l'accesso rapido al setup con Invio (solo quando la schermata di accesso è aperta)
+        document.getElementById('setupPassword').addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                checkSetupPassword();
+            }
+        });
+    </script>
+
+</body>
+</html>
